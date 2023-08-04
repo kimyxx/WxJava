@@ -299,6 +299,13 @@ public abstract class BaseWxPayServiceImpl implements WxPayService {
   }
 
   @Override
+  public WxPayRefundQueryV3Result refundPartnerQueryV3(WxPayRefundQueryV3Request request) throws WxPayException {
+    String url = String.format("%s/v3/refund/domestic/refunds/%s?sub_mchid=%s", this.getPayBaseUrl(), request.getOutRefundNo(),request.getSubMchid());
+    String response = this.getV3(url);
+    return GSON.fromJson(response, WxPayRefundQueryV3Result.class);
+  }
+
+  @Override
   public WxPayOrderNotifyResult parseOrderNotifyResult(String xmlData) throws WxPayException {
     return this.parseOrderNotifyResult(xmlData, null);
   }
@@ -1095,9 +1102,9 @@ public abstract class BaseWxPayServiceImpl implements WxPayService {
   public WxPayApplyBillV3Result applyFundFlowBill(WxPayApplyFundFlowBillV3Request request) throws WxPayException {
     String url;
     if (StringUtils.isBlank(request.getTarType())) {
-      url = String.format("%s/v3/bill/fundflowbill?bill_date=%s&bill_type=%s", this.getPayBaseUrl(), request.getBillDate(), request.getAccountType());
+      url = String.format("%s/v3/bill/fundflowbill?bill_date=%s&account_type=%s", this.getPayBaseUrl(), request.getBillDate(), request.getAccountType());
     } else {
-      url = String.format("%s/v3/bill/fundflowbill?bill_date=%s&bill_type=%s&tar_type=%s", this.getPayBaseUrl(), request.getBillDate(), request.getAccountType(), request.getTarType());
+      url = String.format("%s/v3/bill/fundflowbill?bill_date=%s&account_type=%s&tar_type=%s", this.getPayBaseUrl(), request.getBillDate(), request.getAccountType(), request.getTarType());
     }
     String response = this.getV3(url);
     return GSON.fromJson(response, WxPayApplyBillV3Result.class);
